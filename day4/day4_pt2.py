@@ -1,31 +1,30 @@
 import re
 
 required = ['byr','iyr','eyr','hgt','hcl','ecl','pid']
+colours = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
 
 def byr(passport):
-    return len(passport['byr']) == 4 and int(passport['byr']) >= 1920 and int(passport['byr']) <= 2002
+    return 1920 <= int(passport['byr'])<= 2002
 
 def iyr(passport):
-    return len(passport['iyr']) == 4 and int(passport['iyr']) >= 2010 and int(passport['iyr']) <= 2020
+    return 2010 <= int(passport['iyr'])<= 2020
 
 def eyr(passport):
-    return len(passport['eyr']) == 4 and int(passport['eyr']) >= 2020 and int(passport['eyr']) <= 2030
+    return 2020 <= int(passport['eyr'])<= 2030
 
 def hgt(passport):
+    n = int(re.sub('[^0-9]', '', passport['hgt']))
     if passport['hgt'].endswith('cm'):
-        n = int(re.sub('[^0-9]', '', passport['hgt']))
-        return n >= 150 and n <= 193
+        return 150 <= n <= 193
     elif passport['hgt'].endswith('in'):
-        n = int(re.sub('[^0-9]', '', passport['hgt']))
-        return n >= 59 and n <= 76
-    else:
-        return False
+        return 59 <= n <= 76
+    return False
 
 def hcl(passport):
     return re.search('[#][0-9a-f]{1,6}$', passport['hcl'])
 
 def ecl(passport):
-    return passport['ecl'] in ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
+    return passport['ecl'] in colours
 
 def pid(passport):
     return len(passport['pid']) == 9
@@ -46,4 +45,4 @@ def day4_pt2():
     return len(list(filter(is_valid, passports)))
 
 def test_day4_pt2():
-    assert day4_pt2() is None
+    assert day4_pt2() is 131
